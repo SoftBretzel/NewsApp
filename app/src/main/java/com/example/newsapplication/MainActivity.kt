@@ -1,40 +1,50 @@
 package com.example.newsapplication
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+
+import android.app.DownloadManager
+import android.app.VoiceInteractor
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
+import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
+import com.android.volley.RequestQueue
 import org.json.JSONArray
 import org.json.JSONObject
+import com.android.volley.toolbox.Volley
+import java.io.*
+import java.lang.reflect.Method
 import java.net.URL
+import javax.net.ssl.HttpsURLConnection
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.StringRequest
 
 
 class MainActivity : AppCompatActivity() {
 
-    val url: String = "https://jsonplaceholder.typicode.com/posts"
-    //val sources: String = "https://newsapi.org/v2/sources?apiKey=719161fc33f648fb9e43e12a6dd05682&language=fr"
-    //val flux: String = "https://newsapi.org/v2/everything?apiKey=719161fc33f648fb9e43e12a6dd05682&language=fr&sources=google-news-fr"
+    //val url: String = "https://jsonplaceholder.typicode.com/posts"
+    val source_url: String = "https://newsapi.org/v2/sources?apiKey=719161fc33f648fb9e43e12a6dd05682&language=fr"
+    val current_source: String? = "google-news-fr"
+    val articles_url: String = "https://newsapi.org/v2/everything?apiKey=719161fc33f648fb9e43e12a6dd05682&language=fr&sources=$current_source"
+    lateinit var queue: RequestQueue
+    var sources = JSONArray()
+    var articles = JSONArray()
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
-    //private lateinit var dataset: Array<String>
     private lateinit var dataset: ArrayList<UserDto>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recycler_view)
-
-        // Initialize dataset, this data would usually come from a local content provider or
-        // remote server.
-
+        dataset = ArrayList<UserDto>()
+        getArticles()
         viewManager = LinearLayoutManager(this)
         viewAdapter = CustomAdapter(dataset)
 
@@ -51,50 +61,69 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        /*recyclerView.findViewById(R.id.imgAvatar).setOnClickListener{
-            val monIntent = Intent(this, MainActivity2::class.java)
-            startActivity(monIntent)
-        }*/
     }
 
-    fun getPostsWithVolley() {
-        // Instantiate the RequestQueue.
-        val queue = Volley.newRequestQueue(this)
+    private fun initDataset() {
+        //dataset = Array(DATASET_COUNT, {i -> "This is element # $i"})
 
-        // Request a string response from the provided URL.
-        val stringReq = StringRequest(
-            Request.Method.GET, url,
-            { response ->
+        dataset = ArrayList<UserDto>()
 
-                var strResp = response.toString()
-                val jsonArray: JSONArray = JSONArray(strResp)
-                var strPosts: String = ""
-                dataset = ArrayList<UserDto>()
-                for (i in 0 until jsonArray.length()) {
-                    var jsonInner: JSONObject = jsonArray.getJSONObject(i)
-                    strPosts = strPosts + "\n" + jsonInner.get("title")
-                    var user: UserDto = UserDto(jsonInner.get("title") as String, "Awesome work ;)")
-                    dataset.add(user)
-                }
-                Toast.makeText(this, "3-Fetched Data: "+strResp, Toast.LENGTH_SHORT).show()
-                Log.d("3-Fetched Data", strResp)
-            },
-            {
-                Toast.makeText(this, "That didn't work!", Toast.LENGTH_SHORT).show()
-                Log.d("Fetched Data","That didn't work!")
-            }
-        )
-        queue.add(stringReq)
+        for (i in 0..DATASET_COUNT) {
+            var user: UserDto = UserDto("Beth"+i, "Awesome work ;)")
+            dataset.add(user)
+        }
     }
-    /**
-     * Generates Strings for RecyclerView's adapter. This data would usually come
-     * from a local content provider or remote server.
-     */
-
     companion object {
         val TAG = "RecyclerViewActivity"
         private val DATASET_COUNT = 2
     }
 
+    private fun getSources() {
+        queue = Volley.newRequestQueue(this)
+        val sourcesRequest = object: JsonObjectRequest(
+                Method.GET, source_url, null,
+                { response ->
+                    sources = response.getJSONArray("sources")
+                    Toast.makeText(this, ""+sources.getJSONObject(0).get("name"), Toast.LENGTH_LONG).show()
+                },
+                { _ ->
+
+                })
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["User-Agent"] = "Mozilla/5.0"
+                return headers
+            }
+        }
+
+        queue.add(sourcesRequest)
+    }
+
+    private fun getArticles() {
+        queue = Volley.newRequestQueue(this)
+        val sourcesRequest = object: JsonObjectRequest(
+                Method.GET, articles_url, null,
+                { response ->
+                    articles = response.getJSONArray("articles")
+                    for (j in 0..2) {
+                        var user: UserDto = UserDto(""+articles.getJSONObject(j).get("title"), "Awesome work ;)")
+                        dataset.add(user)
+                    }
+                    Toast.makeText(this, ""+articles.getJSONObject(0).get("title"), Toast.LENGTH_LONG).show()
+                },
+                { _ ->
+
+                })
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["User-Agent"] = "Mozilla/5.0"
+                return headers
+            }
+        }
+
+        queue.add(sourcesRequest)
+    }
 
 }
