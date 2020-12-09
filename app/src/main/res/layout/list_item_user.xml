@@ -3,13 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
     android:orientation="vertical">
 
     <ImageView
         android:id="@+id/imgAvatar"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_margin="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:onClick= "onClickArticle"
         android:src="@drawable/ic_launcher_background" />
 
     <LinearLayout
@@ -23,19 +28,30 @@
             android:id="@+id/txtTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="true"
             android:text="Title"
-            android:textStyle="bold"
-            />
+            android:onClick= "onClickArticle"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/txtAuthor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Author"/>
+            android:clickable="true"
+            android:text="Author" />
+
         <TextView
             android:id="@+id/txtDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="true"
             android:text="Date" />
+
+        <TextView
+            android:id="@+id/Void"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
 
 
     </LinearLayout>

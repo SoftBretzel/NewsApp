@@ -3,6 +3,7 @@ package com.example.newsapplication
 
 import android.app.DownloadManager
 import android.app.VoiceInteractor
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -61,7 +62,10 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        //Log.d("TAG",dataset[0].title)
+        recyclerView.setOnClickListener{
+            val monIntent = Intent(this, ArticleDetail::class.java)
+            startActivity(monIntent)
+        }
 
     }
 
@@ -71,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         dataset = ArrayList<ArticlesDto>()
 
         for (i in 0..DATASET_COUNT) {
-            var article: ArticlesDto = ArticlesDto("Beth"+i, "Awesome work ;)", "2020-12-4")
+            var article: ArticlesDto = ArticlesDto("Beth"+i, "Awesome work ;)", "2020-12-4", "", "", "", "")
             dataset.add(article)
         }
     }
@@ -86,7 +90,7 @@ class MainActivity : AppCompatActivity() {
                 Method.GET, source_url, null,
                 { response ->
                     sources = response.getJSONArray("sources")
-                    Toast.makeText(this, ""+sources.getJSONObject(0).get("name"), Toast.LENGTH_LONG).show()
+                    //Toast.makeText(this, ""+sources.getJSONObject(0).get("name"), Toast.LENGTH_LONG).show()
                 },
                 { _ ->
 
@@ -109,11 +113,17 @@ class MainActivity : AppCompatActivity() {
                 Method.GET, articles_url, null,
                 { response ->
                     articles_list = response.getJSONArray("articles")
-                    for (i in 0..10) {
-                        var article: ArticlesDto = ArticlesDto(""+articles_list.getJSONObject(i).get("title"), ""+articles_list.getJSONObject(i).get("author"),""+articles_list.getJSONObject(i).get("publishedAt"))
+                    for (i in 0 until articles_list.length()) {
+                        var article: ArticlesDto = ArticlesDto(""+articles_list.getJSONObject(i).get("title"),
+                            ""+articles_list.getJSONObject(i).get("author"),
+                            ""+articles_list.getJSONObject(i).get("publishedAt"),
+                            ""+articles_list.getJSONObject(i).get("source"),
+                            ""+articles_list.getJSONObject(i).get("description"),
+                            ""+articles_list.getJSONObject(i).get("url"),
+                            ""+articles_list.getJSONObject(i).get("urlToImage"))
                         dataset.add(article)
                     }
-                    Toast.makeText(this, ""+dataset[0].title, Toast.LENGTH_LONG).show()
+                    //Toast.makeText(this, ""+dataset[0].title, Toast.LENGTH_LONG).show()
                     upRecyclerView()
                 },
                 { _ ->
@@ -139,6 +149,20 @@ class MainActivity : AppCompatActivity() {
             layoutManager = viewManager
             adapter = viewAdapter
         }
+    }
+
+    fun onClickArticle(view: View){
+        val monIntent = Intent(this, ArticleDetail::class.java)
+        monIntent.putExtra("title", dataset[0].title)
+        monIntent.putExtra("author",dataset[0].author)
+        monIntent.putExtra("source",dataset[0].source)
+        monIntent.putExtra("date",dataset[0].date)
+        monIntent.putExtra("description",dataset[0].description)
+        monIntent.putExtra("link",dataset[0].link)
+        monIntent.putExtra("linkImg",dataset[0].linkImg)
+
+        startActivity(monIntent)
+
     }
 }
 

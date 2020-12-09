@@ -1,11 +1,15 @@
 package com.example.newsapplication
 
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newsapplication.ArticleDetail
 
 class CustomAdapter (private val dataSet: ArrayList<ArticlesDto>) :
     RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
@@ -46,6 +50,9 @@ class CustomAdapter (private val dataSet: ArrayList<ArticlesDto>) :
         viewHolder.txtTitle.text = dataSet[position].title
         viewHolder.txtAuthor.text = dataSet[position].author
         viewHolder.txtDate.text = dataSet[position].date
+
+
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)
