@@ -16,7 +16,7 @@ class ArticleDetail : AppCompatActivity() {
 
         findViewById<TextView>(R.id.Title).text = "Titre: "+intent.getStringExtra("title")
         findViewById<TextView>(R.id.Author).text = "Auteurice: "+intent.getStringExtra("author")
-        //findViewById<TextView>(R.id.Source).text = intent.getStringExtra("source")
+        findViewById<TextView>(R.id.Source).text = "Source: "+intent.getStringExtra("source")
         findViewById<TextView>(R.id.Date).text = "Date: "+intent.getStringExtra("date")
         findViewById<TextView>(R.id.Description).text = "Description: "+intent.getStringExtra("description")
 

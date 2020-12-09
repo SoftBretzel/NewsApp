@@ -114,10 +114,12 @@ class MainActivity : AppCompatActivity() {
                 { response ->
                     articles_list = response.getJSONArray("articles")
                     for (i in 0 until articles_list.length()) {
+                        var source: JSONObject = articles_list.getJSONObject(i).get("source") as JSONObject
+                        var name_source: String = source.get("name").toString()
                         var article: ArticlesDto = ArticlesDto(""+articles_list.getJSONObject(i).get("title"),
                             ""+articles_list.getJSONObject(i).get("author"),
                             ""+articles_list.getJSONObject(i).get("publishedAt"),
-                            ""+articles_list.getJSONObject(i).get("source"),
+                            ""+name_source,
                             ""+articles_list.getJSONObject(i).get("description"),
                             ""+articles_list.getJSONObject(i).get("url"),
                             ""+articles_list.getJSONObject(i).get("urlToImage"))

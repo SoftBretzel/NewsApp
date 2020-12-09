@@ -5,11 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapplication.ArticleDetail
+import com.squareup.picasso.Picasso
 
 class CustomAdapter (private val dataSet: ArrayList<ArticlesDto>) :
     RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
@@ -21,6 +23,7 @@ class CustomAdapter (private val dataSet: ArrayList<ArticlesDto>) :
         val txtTitle: TextView
         val txtAuthor: TextView
         val txtDate: TextView
+        val imgAvatar: ImageView
 
         init {
             // Define click listener for the ViewHolder's View.
@@ -28,6 +31,7 @@ class CustomAdapter (private val dataSet: ArrayList<ArticlesDto>) :
             txtTitle = v.findViewById(R.id.txtTitle)
             txtAuthor = v.findViewById(R.id.txtAuthor)
             txtDate= v.findViewById(R.id.txtDate)
+            imgAvatar= v.findViewById(R.id.imgAvatar)
 
         }
     }
@@ -50,7 +54,7 @@ class CustomAdapter (private val dataSet: ArrayList<ArticlesDto>) :
         viewHolder.txtTitle.text = dataSet[position].title
         viewHolder.txtAuthor.text = dataSet[position].author
         viewHolder.txtDate.text = dataSet[position].date
-
+        Picasso.get().load(dataSet[position].linkImg).into(viewHolder.imgAvatar)
 
 
     }
