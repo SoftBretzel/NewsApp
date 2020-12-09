@@ -7,21 +7,24 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class CustomAdapter (private val dataSet: ArrayList<UserDto>) :
+class CustomAdapter (private val dataSet: ArrayList<ArticlesDto>) :
     RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
     /**
      * Provide a reference to the type of views that you are using (custom ViewHolder)
      */
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        val txtName: TextView
-        val txtComment: TextView
+        val txtTitle: TextView
+        val txtAuthor: TextView
+        val txtDate: TextView
 
         init {
             // Define click listener for the ViewHolder's View.
             v.setOnClickListener { Log.d(TAG, "Element $adapterPosition clicked.") }
-            txtName = v.findViewById(R.id.txtName)
-            txtComment = v.findViewById(R.id.txtComment)
+            txtTitle = v.findViewById(R.id.txtTitle)
+            txtAuthor = v.findViewById(R.id.txtAuthor)
+            txtDate= v.findViewById(R.id.txtDate)
+
         }
     }
 
@@ -40,8 +43,9 @@ class CustomAdapter (private val dataSet: ArrayList<UserDto>) :
 
         // Get element from your dataset at this position and replace the contents of the view
         // with that element
-        viewHolder.txtComment.text = dataSet[position].comment
-        viewHolder.txtName.text = dataSet[position].name
+        viewHolder.txtTitle.text = dataSet[position].title
+        viewHolder.txtAuthor.text = dataSet[position].author
+        viewHolder.txtDate.text = dataSet[position].date
     }
 
     // Return the size of your dataset (invoked by the layout manager)

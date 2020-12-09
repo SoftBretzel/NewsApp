@@ -1,3 +1,4 @@
+/*
 package com.example.newsapplication
 
 import androidx.appcompat.app.AppCompatActivity
@@ -60,10 +61,12 @@ class MainActivity2 : AppCompatActivity() {
 
         }
 
-        /*recyclerView.findViewById(R.id.imgAvatar).setOnClickListener{
+        */
+/*recyclerView.findViewById(R.id.imgAvatar).setOnClickListener{
             val monIntent = Intent(this, MainActivity2::class.java)
             startActivity(monIntent)
-        }*/
+        }*//*
+
     }
 
     fun getPostsWithVolley() {
@@ -155,10 +158,12 @@ class MainActivity2 : AppCompatActivity() {
         }
         return buffer.toString()
     }
-    /**
+    */
+/**
      * Generates Strings for RecyclerView's adapter. This data would usually come
      * from a local content provider or remote server.
-     */
+     *//*
+
 
     private fun initDataset() {
         //dataset = Array(DATASET_COUNT, {i -> "This is element # $i"})
@@ -176,4 +181,4 @@ class MainActivity2 : AppCompatActivity() {
     }
 
 
-}
+}*/
