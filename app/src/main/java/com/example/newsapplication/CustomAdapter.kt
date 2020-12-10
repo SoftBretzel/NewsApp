@@ -12,7 +12,6 @@ import com.squareup.picasso.Picasso
 
 class CustomAdapter(private val dataSet: ArrayList<ArticlesDto>, private val listener: RecyclerViewClickListener ) :
     RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
-    private val itemListener: RecyclerViewClickListener? = null
     /**
      * Provide a reference to the type of views that you are using (custom ViewHolder)
      */
