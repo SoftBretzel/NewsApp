@@ -1,21 +1,18 @@
 package com.example.newsapplication
 
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.example.newsapplication.ArticleDetail
 import com.squareup.picasso.Picasso
 
-class CustomAdapter (private val dataSet: ArrayList<ArticlesDto>) :
-    RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
+class CustomAdapter(private val dataSet: ArrayList<ArticlesDto>, private val listener: RecyclerViewClickListener ) :
+    RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
+    private val itemListener: RecyclerViewClickListener? = null
     /**
      * Provide a reference to the type of views that you are using (custom ViewHolder)
      */
@@ -49,6 +46,8 @@ class CustomAdapter (private val dataSet: ArrayList<ArticlesDto>) :
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         Log.d(TAG, "Element $position set.")
 
+        viewHolder.itemView.setOnClickListener {  listener.recyclerViewListClicked(position)}
+
         // Get element from your dataset at this position and replace the contents of the view
         // with that element
         viewHolder.txtTitle.text = dataSet[position].title
@@ -64,5 +63,9 @@ class CustomAdapter (private val dataSet: ArrayList<ArticlesDto>) :
 
     companion object {
         private val TAG = "CustomAdapter"
+    }
+
+    interface RecyclerViewClickListener {
+        fun recyclerViewListClicked(position: Int)
     }
 }

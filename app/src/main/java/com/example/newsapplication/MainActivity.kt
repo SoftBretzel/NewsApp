@@ -26,7 +26,7 @@ import com.android.volley.toolbox.StringRequest
 import com.example.newsapplication.ArticlesDto
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CustomAdapter.RecyclerViewClickListener{
 
     val source_url: String = "https://newsapi.org/v2/sources?apiKey=719161fc33f648fb9e43e12a6dd05682&language=fr"
     var current_source: String = "le-monde"
@@ -40,14 +40,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var dataset: ArrayList<ArticlesDto>
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_recycler_view)
+        setContentView(R.layout.activity_main)
         getSources(source_url)
         getArticles(articles_url)
-        //initDataset()
         viewManager = LinearLayoutManager(this)
-        viewAdapter = CustomAdapter(dataset)
+        viewAdapter = CustomAdapter(dataset, this)
 
         recyclerView = findViewById<RecyclerView>(R.id.my_recycler_view).apply {
             // use this setting to improve performance if you know that changes
@@ -69,20 +69,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun initDataset() {
-        //dataset = Array(DATASET_COUNT, {i -> "This is element # $i"})
-
-        dataset = ArrayList<ArticlesDto>()
-
-        for (i in 0..DATASET_COUNT) {
-            var article: ArticlesDto = ArticlesDto("Beth"+i, "Awesome work ;)", "2020-12-4", "", "", "", "")
-            dataset.add(article)
-        }
-    }
-    companion object {
-        val TAG = "RecyclerViewActivity"
-        private val DATASET_COUNT = 2
-    }
 
     private fun getSources(source_url: String) {
         queue = Volley.newRequestQueue(this)
@@ -144,7 +130,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun upRecyclerView() {
         viewManager = LinearLayoutManager(this)
-        viewAdapter = CustomAdapter(dataset)
+        viewAdapter = CustomAdapter(dataset, this)
 
         recyclerView = findViewById<RecyclerView>(R.id.my_recycler_view).apply {
             setHasFixedSize(true)
@@ -153,18 +139,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun onClickArticle(view: View){
+
+    override fun recyclerViewListClicked(index: Int){
         val monIntent = Intent(this, ArticleDetail::class.java)
-        monIntent.putExtra("title", dataset[0].title)
-        monIntent.putExtra("author",dataset[0].author)
-        monIntent.putExtra("source",dataset[0].source)
-        monIntent.putExtra("date",dataset[0].date)
-        monIntent.putExtra("description",dataset[0].description)
-        monIntent.putExtra("link",dataset[0].link)
-        monIntent.putExtra("linkImg",dataset[0].linkImg)
+        monIntent.putExtra("title", dataset[index].title)
+        monIntent.putExtra("author",dataset[index].author)
+        monIntent.putExtra("source",dataset[index].source)
+        monIntent.putExtra("date",dataset[index].date)
+        monIntent.putExtra("description",dataset[index].description)
+        monIntent.putExtra("link",dataset[index].link)
+        monIntent.putExtra("linkImg",dataset[index].linkImg)
 
         startActivity(monIntent)
+        }
+
 
     }
-}
+
 

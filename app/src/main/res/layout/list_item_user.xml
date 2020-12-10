@@ -14,7 +14,6 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
-        android:onClick= "onClickArticle"
         android:src="@drawable/ic_launcher_background" />
 
     <LinearLayout
@@ -30,7 +29,6 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:text="Title"
-            android:onClick= "onClickArticle"
             android:textStyle="bold" />
 
         <TextView

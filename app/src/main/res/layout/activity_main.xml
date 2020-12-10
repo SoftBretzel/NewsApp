@@ -6,37 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
-<!--    <menu
-        android:layout_width="0dp"
-        android:layout_height="160dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
-
-        <item
-            android:id="@+id/new_game"
-            android:icon="@drawable/ic_new_game"
-            android:showAsAction="ifRoom"
-            android:title="@string/new_game" />
-
-        <item
-            android:id="@+id/help"
-            android:icon="@drawable/ic_help"
-            android:title="@string/help" />
-    </menu>-->
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/planets_spinner"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/test"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/my_recycler_view"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/my_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.173"
+        tools:layout_editor_absoluteX="16dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
