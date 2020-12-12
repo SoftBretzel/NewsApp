@@ -2,6 +2,7 @@
 <resources>
     <color name="purple_200">#FFBB86FC</color>
     <color name="poussin">#F5D241</color>
+    <color name="orange">#FF5733</color>
     <color name="light_gray">#DAD3DD</color>
     <color name="dark_gray">#AEACAF</color>
     <color name="purple_500">#FF6200EE</color>

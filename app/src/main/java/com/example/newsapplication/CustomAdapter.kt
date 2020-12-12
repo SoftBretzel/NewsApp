@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 
 
-class CustomAdapter(private val dataSet: ArrayList<ArticlesDto>, private val listener: RecyclerViewClickListener ) :
+class CustomAdapter(private val dataSet: ArrayList<ArticlesDto>,
+                    private val listener: RecyclerViewClickListener,
+                    private val onBottomReachedListener: OnBottomReachedListener) :
     RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using (custom ViewHolder)
@@ -23,7 +25,7 @@ class CustomAdapter(private val dataSet: ArrayList<ArticlesDto>, private val lis
 
         init {
             // Define click listener for the ViewHolder's View.
-            v.setOnClickListener { Log.d(TAG, "Element $adapterPosition clicked.") }
+            v.setOnClickListener { Log.d("TAG", "Element $adapterPosition clicked.") }
             txtTitle = v.findViewById(R.id.txtTitle)
             txtAuthor = v.findViewById(R.id.txtAuthor)
             txtDate= v.findViewById(R.id.txtDate)
@@ -43,7 +45,7 @@ class CustomAdapter(private val dataSet: ArrayList<ArticlesDto>, private val lis
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        Log.d(TAG, "Element $position set.")
+        Log.d("TAG", "Element $position set.")
 
         viewHolder.itemView.setOnClickListener {  listener.recyclerViewListClicked(position)}
 
@@ -52,19 +54,35 @@ class CustomAdapter(private val dataSet: ArrayList<ArticlesDto>, private val lis
         viewHolder.txtTitle.text = dataSet[position].title
         viewHolder.txtAuthor.text = dataSet[position].author
         viewHolder.txtDate.text = dataSet[position].date
-        Picasso.get().load(dataSet[position].linkImg).into(viewHolder.imgAvatar)
+        if(dataSet[position].linkImg == "null"){
+            Picasso.get().load("https://cdn3.iconfinder.com/data/icons/ballicons-reloaded-free/512/icon-70-512.png").into(viewHolder.imgAvatar)
+        }
+        else{
+            Picasso.get().load(dataSet[position].linkImg).into(viewHolder.imgAvatar)}
 
+        if (position == (itemCount - 1)){
+
+            onBottomReachedListener.onBottomReached(position);
+
+        }
 
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = dataSet.size
 
-    companion object {
-        private val TAG = "CustomAdapter"
+    fun addArticles(dataset2: ArrayList<ArticlesDto>) {
+        dataSet.addAll(dataset2);
+        notifyDataSetChanged();
     }
 
     interface RecyclerViewClickListener {
         fun recyclerViewListClicked(position: Int)
     }
+
+    interface OnBottomReachedListener {
+        fun onBottomReached(position: Int)
+    }
+
+
 }
