@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(),
 
     val source_url: String = "https://newsapi.org/v2/sources?apiKey=719161fc33f648fb9e43e12a6dd05682&language=fr"
     var current_source: String = "le-monde"
-    var current_page: Int = 5
+    var current_page: Int = 1
     lateinit var queue: RequestQueue
     var sources = JSONArray()
     var source_list = ArrayList<String>()
@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         progressBar= findViewById<ProgressBar>(R.id.progressBar)
+        progressBar.isVisible = true
         getSources(source_url)
         getArticles(current_page.toString())
 
@@ -105,32 +106,37 @@ class MainActivity : AppCompatActivity(),
         queue = Volley.newRequestQueue(this)
         var nom: String
         val sourcesRequest = object: JsonObjectRequest(
-                Method.GET, source_url, null,
-                { response ->
-                    sources = response.getJSONArray("sources")
-                    for (i in 0 until sources.length()) {
-                        nom = sources.getJSONObject(i).get("name").toString()
-                        source_list.add(nom)
-                    }
-                    progressBar.isVisible = false
-                },
-                { val builder: AlertDialog.Builder? = DialogActivity@this?.let{
+            Method.GET, source_url, null,
+            { response ->
+                sources = response.getJSONArray("sources")
+                for (i in 0 until sources.length()) {
+                    nom = sources.getJSONObject(i).get("name").toString()
+                    source_list.add(nom)
+                }
+                progressBar.isVisible = false
+            },
+            {
+                val builder: AlertDialog.Builder? = DialogActivity@ this?.let {
                     AlertDialog.Builder(it)
                 }
-                    builder?.setMessage("An error occurred, check your internet connection and retry")
-                            ?.setTitle("Error")
-                            ?.apply {
-                                setPositiveButton(R.string.ok, DialogInterface.OnClickListener { dialog, id ->
-                                })
-                                setNegativeButton(R.string.retry, DialogInterface.OnClickListener{ dialog, id ->
-                                    getSources(source_url)
-                                })
-                            }
+                builder?.setMessage("An error occurred, check your internet connection and retry")
+                    ?.setTitle("Error")
+                    ?.apply {
+                        setPositiveButton(
+                            R.string.ok,
+                            DialogInterface.OnClickListener { dialog, id ->
+                            })
+                        setNegativeButton(
+                            R.string.retry,
+                            DialogInterface.OnClickListener { dialog, id ->
+                                getSources(source_url)
+                            })
+                    }
 
-                    val dialog: AlertDialog? = builder?.create()
-                    dialog?.show()
+                val dialog: AlertDialog? = builder?.create()
+                dialog?.show()
 
-                })
+            })
         {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
@@ -148,40 +154,44 @@ class MainActivity : AppCompatActivity(),
         var articles_url: String = "https://newsapi.org/v2/everything?apiKey=719161fc33f648fb9e43e12a6dd05682&language=fr&sources=$currentSource&page=$page"
         queue = Volley.newRequestQueue(this)
         val articlesRequest = object: JsonObjectRequest(
-                Method.GET, articles_url, null,
-                { response ->
-                    if(page == current_page.toString()) {
-                        articles_list = response.getJSONArray("articles")
-                        getInfo(articles_list, dataset)
-                        upRecyclerView()
-                    } else {
-                        current_page = page.toInt()
-                        val dataset2= ArrayList<ArticlesDto>()
-                        articles_list = response.getJSONArray("articles")
-                        getInfo(articles_list, dataset2)
-                        dataset.addAll(dataset2);
-                        viewAdapter.notifyDataSetChanged()
-                        getInfo(articles_list, dataset)
+            Method.GET, articles_url, null,
+            { response ->
+                if (page == current_page.toString()) {
+                    articles_list = response.getJSONArray("articles")
+                    getInfo(articles_list, dataset)
+                    upRecyclerView()
+                } else {
+                    current_page = page.toInt()
+                    val dataset2 = ArrayList<ArticlesDto>()
+                    articles_list = response.getJSONArray("articles")
+                    getInfo(articles_list, dataset2)
+                    dataset.addAll(dataset2);
+                    viewAdapter.notifyDataSetChanged()
+                    getInfo(articles_list, dataset)
                 }
-                    progressBar.isVisible = false
-                },
-                { error ->
-                    val builder: AlertDialog.Builder? = DialogActivity@this?.let{
-                        AlertDialog.Builder(it)
+                progressBar.isVisible = false
+            },
+            { error ->
+                val builder: AlertDialog.Builder? = DialogActivity@ this?.let {
+                    AlertDialog.Builder(it)
+                }
+                builder?.setMessage("An error occurred, you may have reached the end of the data or lost your internet connection")
+                    ?.setTitle("Error")
+                    ?.apply {
+                        setPositiveButton(
+                            R.string.ok,
+                            DialogInterface.OnClickListener { dialog, id ->
+                            })
+                        setNegativeButton(
+                            R.string.retry,
+                            DialogInterface.OnClickListener { dialog, id ->
+                                getArticles(page)
+                            })
                     }
-                    builder?.setMessage("An error occurred, you may have reached the end of the data")
-                            ?.setTitle("Error")
-                            ?.apply {
-                                setPositiveButton(R.string.ok, DialogInterface.OnClickListener { dialog, id ->
-                                })
-                                setNegativeButton(R.string.retry, DialogInterface.OnClickListener{ dialog, id ->
-                                    getArticles(page)
-                                })
-                            }
 
-                    val dialog: AlertDialog? = builder?.create()
-                    dialog?.show()
-                })
+                val dialog: AlertDialog? = builder?.create()
+                dialog?.show()
+            })
         {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
@@ -219,7 +229,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onBottomReached(index: Int){
-        getArticles((current_page+1).toString())
+        getArticles((current_page + 1).toString())
         Log.d("TEST", current_page.toString())
     }
 
@@ -229,13 +239,15 @@ class MainActivity : AppCompatActivity(),
         for (i in 0 until jsonArray.length()) {
             var source: JSONObject = jsonArray.getJSONObject(i).get("source") as JSONObject
             var name_source: String = source.get("name").toString()
-            var article: ArticlesDto = ArticlesDto("" + jsonArray.getJSONObject(i).get("title"),
-                    "" + jsonArray.getJSONObject(i).get("author"),
-                    "" + jsonArray.getJSONObject(i).get("publishedAt"),
-                    "" + name_source,
-                    "" + jsonArray.getJSONObject(i).get("description"),
-                    "" + jsonArray.getJSONObject(i).get("url"),
-                    "" + jsonArray.getJSONObject(i).get("urlToImage"))
+            var article: ArticlesDto = ArticlesDto(
+                "" + jsonArray.getJSONObject(i).get("title"),
+                "" + jsonArray.getJSONObject(i).get("author"),
+                "" + jsonArray.getJSONObject(i).get("publishedAt"),
+                "" + name_source,
+                "" + jsonArray.getJSONObject(i).get("description"),
+                "" + jsonArray.getJSONObject(i).get("url"),
+                "" + jsonArray.getJSONObject(i).get("urlToImage")
+            )
             dataset.add(article)
         }
     }

@@ -11,9 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NewsApplication">
-        <activity android:name=".SplashScreenActivity"></activity>
+        <activity android:name=".WebViewActivity"></activity>
         <activity android:name=".ArticleDetail" />
-        <activity android:name=".MainActivity2" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

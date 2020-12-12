@@ -23,9 +23,9 @@ class ArticleDetail : AppCompatActivity() {
         Picasso.get().load(intent.getStringExtra("linkImg")).into(findViewById<ImageView>(R.id.Image))
 
         findViewById<TextView>(R.id.Link).setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(intent.getStringExtra("link")))
-           // val intent = Intent(Intent.ACTION_VIEW,Uri.parse("http://www.google.com"))
-            startActivity(intent)
+            val monIntent = Intent(this, WebViewActivity::class.java)
+            monIntent.putExtra("link", intent.getStringExtra("link"))
+            startActivity(monIntent)
         }
 
     }
